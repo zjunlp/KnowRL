@@ -39,8 +39,8 @@ We recommend creating a new conda environment to run our project.
 conda create -n knowrl python=3.12
 conda activate knowrl
 
-git clone [https://github.com/your-repo/knowrl.git](https://github.com/your-repo/knowrl.git)
-cd knowrl
+git clone https://github.com/zjunlp/KnowRL.git
+cd KnowRL
 
 pip install -r requirements.txt
 ```
