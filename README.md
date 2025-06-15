@@ -79,36 +79,6 @@ If you wish to build the knowledge base from your own data source (e.g., a speci
 This will create the `knowledge_base.db` file required for the `fact_reward` function during training.
 
 
-
-## 📉Training
-The training process is orchestrated by `train/train.sh`, which sets up environment variables and launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, with Reinforcement Learning on 1×A800.
-
-### 1. Configuration
-Before running, you need to configure the following:
-
-**a. Environment Variables in `train/train.sh`:**
-   - Set your API keys for services like OpenAI/ZhipuAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
-   - Set your `WANDB_API_KEY` for experiment tracking.
-   - Ensure `FACTSCORE_DB_PATH` points to the `knowledge_base.db` file you created.
-
-**b. Training Parameters in `script/grpo.yaml`:**
-   - `model_name_or_path`: Path to the base model for training (e.g., your cold-start SFT model).
-   - `dataset_id_or_path`: Path to your RL training data.
-   - `output_dir`: Directory to save the final trained model.
-   - `wandb_project`, `wandb_entity`, `run_name`: WandB configuration.
-   - `per_device_train_batch_size`, `learning_rate`, `max_steps`: Standard training hyperparameters.
-   - `beta`, `num_generations`: GRPO-specific algorithm parameters.
-
-### 2. Run Training
-Once configured, launch the training from the `train` directory:
-
-```bash
-cd knowrl/train/
-bash train.sh
-```
-The script will set the `CUDA_VISIBLE_DEVICES`, print the configuration, and start the training process.
-
-
 ## 📉Training
 Our training process consists of two main stages: a Cold-Start Supervised Fine-Tuning (SFT) phase to align the model with factual thinking patterns, followed by the Knowledgeable Reinforcement Learning (RL) phase to enhance factuality.
 
@@ -163,10 +133,31 @@ CUDA_VISIBLE_DEVICES=0,1 llama-factory-cli train llama_factory_sft.yaml
 ```
 
 ### Stage 2: Knowledgeable Reinforcement Learning (RL)
-This stage uses the SFT-tuned model and further trains it with our knowledge-enhanced reward signal. The process is orchestrated by `train/train.sh`, which launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, on a single A800 GPU.
+This stage uses the SFT-tuned model and further trains it with our knowledge-enhanced reward signal. The process is orchestrated by `train/train.sh`, which launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, on 1×A800 GPU.
 
-**a. Main Training Script (`train/train.sh`)**
+**a. Environment Variables in `train/train.sh`:**
 This script sets up all necessary environment variables and executes the training.
+   - Set your API keys for services like OpenAI/ZhipuAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
+   - Set your `WANDB_API_KEY` for experiment tracking.
+   - Ensure `FACTSCORE_DB_PATH` points to the `knowledge_base.db` file you created.
+
+**b. Training Parameters in `script/grpo.yaml`**
+This file contains all hyperparameters for the RL stage.
+   - `model_name_or_path`: Path to the base model for RL training (this should be your SFT-tuned model).
+   - `dataset_id_or_path`: Path to your RL training data.
+   - `output_dir`: Directory to save the final trained model.
+   - `wandb_project`, `wandb_entity`, `run_name`: WandB configuration.
+   - `per_device_train_batch_size`, `learning_rate`, `max_steps`: Standard training hyperparameters.
+   - `beta`, `num_generations`: GRPO-specific algorithm parameters.
+
+**c. Launch RL Training**
+Once configured, launch the training from the `train` directory:
+
+```bash
+cd KnowRL/train/
+bash train.sh
+```
+The script will set the `CUDA_VISIBLE_DEVICES`, print the configuration, and start the training process.
 
 <details>
 <summary>Click to view train.sh</summary>
@@ -215,22 +206,6 @@ fi
 ```
 </details>
 
-**b. Training Parameters in `script/grpo.yaml`**
-This file contains all hyperparameters for the RL stage.
-   - `model_name_or_path`: Path to the base model for RL training (this should be your SFT-tuned model).
-   - `dataset_id_or_path`: Path to your RL training data.
-   - `output_dir`: Directory to save the final trained model.
-   - And other parameters like `learning_rate`, `beta`, etc.
-
-**c. Launch RL Training**
-Once configured, launch the training from the `train` directory:
-
-```bash
-cd knowrl/train/
-bash train.sh
-
-
-
 ## 🧐Evaluation
 All our models are evaluated on the **OpenCompass** platform to ensure fair and reproducible results. Please refer to our paper for detailed results on benchmarks such as TruthfulQA, SimpleQA, GPQA, and AIME.
 
@@ -240,7 +215,7 @@ If you find this work useful in your research, please consider citing our paper:
 @inproceedings{ren2025knowrl,
     title={{KnowRL}: Exploring Knowledgeable Reinforcement Learning for Factuality},
     author={Baochang Ren and Shuofei Qiao and Wenhao Yu and Huajun Chen and Ningyu Zhang},
-    booktitle={ACL 2025},
+    booktitle={EMNLP 2025},
     year={2025}
 }
 ```
