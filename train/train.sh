@@ -1,27 +1,27 @@
-
 # ============================================================================
 # API Configuration - Replace with your actual credentials
 # ============================================================================
-export OPENAI_API_KEY_FACTSCORE="sk-VKdZWX5X8pNODDB8v39XyoZpz0hmvuoB43KY3xSIwz80NrHu"
-export OPENAI_BASE_URL_FACTSCORE="https://vip.dmxapi.com/v1/"
+export OPENAI_API_KEY_FACTSCORE="your_openai_api_key_here"
+export OPENAI_BASE_URL_FACTSCORE="https://api.openai.com/v1"
 
-export OPENAI_API_KEY_JUDGE="sk-VKdZWX5X8pNODDB8v39XyoZpz0hmvuoB43KY3xSIwz80NrHu"
-export OPENAI_API_BASE_JUDGE="https://vip.dmxapi.com/v1/"
+export OPENAI_API_KEY_JUDGE="your_openai_api_key_here"
+export OPENAI_API_BASE_JUDGE="https://api.openai.com/v1"
 
-export WANDB_API_KEY='c17e9123de434ec0c85c72c134ed9005081f6351'
-export WANDB_MODE="offline"
+export WANDB_API_KEY="your_wandb_api_key_here"
+export WANDB_MODE="offline" ## Optional
 # ============================================================================
 # Configuration
 # ============================================================================
-export FACTSCORE_DB_PATH="./reward_function/FActScore/build_knowledge/knowledge_base.db"
+export FACTSCORE_DB_PATH="./FActScore/build_knowledge/knowledge_base.db"
 export USE_API_MANAGER_FOR_LLM_EVAL=True
 export USE_API_MANAGER_FOR_FACTSCORE=True
 
 # Set GPU device
-export CUDA_VISIBLE_DEVICES=5
+export CUDA_VISIBLE_DEVICES=0
 
 # Configuration file
 CONFIG_FILE="./script/grpo.yaml"
+
 # ============================================================================
 # Run Training
 # ============================================================================
