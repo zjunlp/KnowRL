@@ -5,7 +5,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/25xx.xxxxx">📄arXiv</a> •
   <a href="https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d">🤗HuggingFace</a> •
-  <a href="https://github.com/your-repo/knowrl">💻Github</a>
+  <a href="https://huggingface.co/datasets/zjunlp/KnowRL-Train-Data">📖Datasets</a>
 </p>
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
