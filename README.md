@@ -26,7 +26,7 @@
 ---
 
 ## 🌻Acknowledgement
-Our Cold-Start SFT stage is implemented based on the excellent LLaMA-Factory framework. Our reinforcement learning training code is based on [TRL](https://github.com/huggingface/trl) and [Unsloth](https://github.com/unslothai/unsloth). We thank all authors for their great contributions!
+Our Cold-Start SFT stage is implemented based on the excellent [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework. Our reinforcement learning training code is based on [TRL](https://github.com/huggingface/trl) and [Unsloth](https://github.com/unslothai/unsloth). We thank all authors for their great contributions!
 ![alt text](./assets/method.jpg)
 
 ## 🌟Overview
