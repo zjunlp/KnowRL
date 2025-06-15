@@ -26,7 +26,7 @@
 ---
 
 ## 🌻Acknowledgement
-Our Cold-Start SFT stage is implemented based on the excellent [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework. We thank its authors for their great contribution!
+Our Cold-Start SFT stage is implemented based on the excellent [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory). We thank its authors for their great contribution!
 
 ![alt text](./assets/method.jpg)
 
@@ -47,18 +47,39 @@ pip install -r requirements.txt
 ```
 
 ## 📚Knowledge Base Construction
-KnowRL's factuality reward relies on an external knowledge base built from a corpus like Wikipedia. This is a prerequisite for running the RL training.
+## 📚Knowledge Base Construction
+
+KnowRL's factuality reward relies on an external knowledge base. You can either download our pre-built version or build it from your own corpus.
+
+#### Option 1: Download Pre-built Knowledge Base (Recommended)
+
+This is the easiest way to get started. We have hosted the pre-built `knowledge_base.db` file on [Google Drive](https://drive.google.com/file/d/1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI/view?usp=sharing).
+
+    ```bash
+    # The target directory for the knowledge base
+    cd train/reward_function/FActScore/build_knowledge/
+
+    # Download the file from Google Drive and name it knowledge_base.db
+    gdown [https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI](https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI) -O knowledge_base.db
+    ```
+    This command will download the database directly into the required folder.
+
+#### Option 2: Build from Scratch
+
+If you wish to build the knowledge base from your own data source (e.g., a specific Wikipedia dump).
 
 1.  Place your source data file (e.g., `wikipedia.jsonl`) in a directory.
 2.  Edit the `build_db.sh` script to point `DATA_PATH` to your data file.
 3.  Run the script from the `build_knowledge` directory to create the SQLite database.
 
-```bash
-cd train/reward_function/FActScore/build_knowledge/
-# Edit DATA_PATH in build_db.sh to your source file
-bash build_db.sh
-```
-This will create a `knowledge_base.db` file, which is required for the `fact_reward` function during training.
+    ```bash
+    cd train/reward_function/FActScore/build_knowledge/
+    # Edit DATA_PATH in build_db.sh to point to your source file
+    bash build_db.sh
+    ```
+
+This will create the `knowledge_base.db` file required for the `fact_reward` function during training.
+
 
 
 ## 📉Training
