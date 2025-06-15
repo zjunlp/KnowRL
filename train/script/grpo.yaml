@@ -1,0 +1,52 @@
+# Model parameters
+model_name_or_path: /disk2/rbc/sft-model/coldstart_3K/DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior_length_300-700-4epoch4
+model_revision: main
+torch_dtype: bfloat16
+lora_r: 256
+lora_alpha: 512
+attn_implementation: flash_attention_2
+bf16: true
+tf32: true
+output_dir: output/DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior-4epoch4-num12-llama
+
+# Dataset parameters
+dataset_id_or_path: ../data/rl/knowrl_RLdata.json
+
+# WandB parameters
+report_to: wandb
+wandb_project: DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior-4epoch4-num12-llama
+wandb_entity: rbc576625-zhejiang-university
+run_name: Qwen2.5-7B-r1
+
+# Training parameters
+max_steps: 150
+per_device_train_batch_size: 24
+gradient_accumulation_steps: 4
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+learning_rate: 1.0e-5
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+seed: 42
+
+# GRPO algorithm parameters
+beta: 0.001
+optim: adamw_8bit
+max_prompt_length: 256
+max_completion_length: 1024
+num_generations: 24
+use_vllm: true
+vllm_gpu_memory_utilization: 0.5
+
+# Logging parameters
+logging_strategy: steps
+logging_steps: 1
+save_strategy: "steps"
+save_steps: 50
+resume_from_checkpoint: false
+
+# Configuration file paths 
+grpo_config_file: "./script/grpo.yaml"
+
+
