@@ -72,6 +72,7 @@ If you wish to build the knowledge base from your own data source (e.g., a speci
 
     ```bash
     cd train/reward_function/FActScore/build_knowledge/
+    
     # Edit DATA_PATH in build_db.sh to point to your source file
     bash build_db.sh
     ```
