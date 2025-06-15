@@ -108,6 +108,129 @@ bash train.sh
 ```
 The script will set the `CUDA_VISIBLE_DEVICES`, print the configuration, and start the training process.
 
+
+## 📉Training
+Our training process consists of two main stages: a Cold-Start Supervised Fine-Tuning (SFT) phase to align the model with factual thinking patterns, followed by the Knowledgeable Reinforcement Learning (RL) phase to enhance factuality.
+
+### Stage 1: Cold-Start SFT
+This initial stage fine-tunes the base model on a high-quality dataset of fact-based question-answering pairs. This pre-aligns the model, making the subsequent RL training more stable and effective. We use the [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework for this stage.
+
+**Example LLaMA-Factory SFT Command:**
+Below is an example YAML configuration for running the SFT. You can adapt the parameters for your specific setup.
+
+```yaml
+# llama_factory_sft.yaml
+### model
+model_name_or_path: /path/to/your/base_model # e.g., /path/to/DeepSeek-R1-Distill-Qwen-7B
+deepspeed: /path/to/your/ds_z3_config.json
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: q_proj,v_proj
+lora_rank: 256
+lora_alpha: 512
+
+### dataset
+dataset: your_coldstart_dataset # e.g., coldstart_3K
+template: qwen
+cutoff_len: 3072
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: /path/to/your/output_adapter # e.g., /adapter-saves/MyModel-SFT
+logging_steps: 10
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+save_strategy: 'no'
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 1
+learning_rate: 1.0e-4
+num_train_epochs: 4.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+fp16: true
+ddp_timeout: 180000000
+```
+To run the SFT, you would use a command like:
+```bash
+CUDA_VISIBLE_DEVICES=0,1 llama-factory-cli train llama_factory_sft.yaml
+```
+
+### Stage 2: Knowledgeable Reinforcement Learning (RL)
+This stage uses the SFT-tuned model and further trains it with our knowledge-enhanced reward signal. The process is orchestrated by `train/train.sh`, which launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, on a single A800 GPU.
+
+**a. Main Training Script (`train/train.sh`)**
+This script sets up all necessary environment variables and executes the training.
+
+<details>
+<summary>Click to view train.sh</summary>
+
+```bash
+#!/bin/bash
+# ============================================================================
+# API Configuration - Replace with your actual credentials
+# ============================================================================
+export OPENAI_API_KEY_FACTSCORE="your_openai_api_key_here"
+export OPENAI_BASE_URL_FACTSCORE="[https://api.openai.com/v1](https://api.openai.com/v1)"
+
+export OPENAI_API_KEY_JUDGE="your_openai_api_key_here"
+export OPENAI_API_BASE_JUDGE="[https://api.openai.com/v1](https://api.openai.com/v1)"
+
+export WANDB_API_KEY="your_wandb_api_key_here"
+export WANDB_MODE="offline" ## Optional: set to "online" to sync
+# ============================================================================
+# Configuration
+# ============================================================================
+export FACTSCORE_DB_PATH="./FActScore/build_knowledge/knowledge_base.db"
+export USE_API_MANAGER_FOR_LLM_EVAL=True
+export USE_API_MANAGER_FOR_FACTSCORE=True
+
+# Set GPU device
+export CUDA_VISIBLE_DEVICES=0
+
+# Configuration file
+CONFIG_FILE="./script/grpo.yaml"
+
+# ============================================================================
+# Run Training
+# ============================================================================
+echo "Starting GRPO training..."
+echo "Config: $CONFIG_FILE"
+echo "GPU: $CUDA_VISIBLE_DEVICES"
+
+python main.py --config "$CONFIG_FILE"
+
+if [ $? -eq 0 ]; then
+    echo "✅ Training completed successfully!"
+else
+    echo "❌ Training failed!"
+    exit 1
+fi
+```
+</details>
+
+**b. Training Parameters in `script/grpo.yaml`**
+This file contains all hyperparameters for the RL stage.
+   - `model_name_or_path`: Path to the base model for RL training (this should be your SFT-tuned model).
+   - `dataset_id_or_path`: Path to your RL training data.
+   - `output_dir`: Directory to save the final trained model.
+   - And other parameters like `learning_rate`, `beta`, etc.
+
+**c. Launch RL Training**
+Once configured, launch the training from the `train` directory:
+
+```bash
+cd knowrl/train/
+bash train.sh
+
+
+
 ## 🧐Evaluation
 All our models are evaluated on the **OpenCompass** platform to ensure fair and reproducible results. Please refer to our paper for detailed results on benchmarks such as TruthfulQA, SimpleQA, GPQA, and AIME.
 
