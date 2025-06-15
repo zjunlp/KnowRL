@@ -80,7 +80,7 @@ This will create the `knowledge_base.db` file required for the `fact_reward` fun
 
 
 ## 📉Training
-Our training process consists of two main stages: a Cold-Start Supervised Fine-Tuning (SFT) phase to align the model with factual thinking patterns, followed by the Knowledgeable Reinforcement Learning (RL) phase to enhance factuality.
+Our training process consists of two main stages: a Cold-Start Supervised Fine-Tuning (SFT) phase to align the model with factual thinking patterns, followed by the Knowledgeable Reinforcement Learning (RL) phase to enhance factuality. Also, our datasets and models have been uploaded to [huggingface](https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d).
 
 ### Stage 1: Cold-Start SFT
 This initial stage fine-tunes the base model on a high-quality dataset of fact-based question-answering pairs. This pre-aligns the model, making the subsequent RL training more stable and effective. We use the [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework for this stage.
