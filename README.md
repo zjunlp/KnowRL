@@ -47,7 +47,6 @@ pip install -r requirements.txt
 ```
 
 ## 📚Knowledge Base Construction
-## 📚Knowledge Base Construction
 
 KnowRL's factuality reward relies on an external knowledge base. You can either download our pre-built version or build it from your own corpus.
 
