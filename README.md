@@ -54,13 +54,13 @@ KnowRL's factuality reward relies on an external knowledge base. You can either 
 
 This is the easiest way to get started. We have hosted the pre-built `knowledge_base.db` file on [Google Drive](https://drive.google.com/file/d/1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI/view?usp=sharing).
 
-    ```bash
-    # The target directory for the knowledge base
-    cd train/reward_function/FActScore/build_knowledge/
+```bash
+# The target directory for the knowledge base
+cd train/reward_function/FActScore/build_knowledge/
 
-    # Download the file from Google Drive and name it knowledge_base.db
-    gdown https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI
-    ```
+# Download the file from Google Drive and name it knowledge_base.db
+gdown https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI
+```
 This command will download the database directly into the required folder.
 
 #### Option 2: Build from Scratch
