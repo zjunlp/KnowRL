@@ -51,7 +51,7 @@ KnowRL's factuality reward relies on an external knowledge base. You can either 
 
 #### Option 1: Download Pre-built Knowledge Base (Recommended)
 
-This is the easiest way to get started. We have hosted the pre-built `knowledge_base.db` file on [Google Drive](https://drive.google.com/file/d/1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI/view?usp=sharing).
+This is the easiest way to get started. We have hosted the pre-built `knowledge_base.db` file on [Google Drive](https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI).
 
 ```bash
 # The target directory for the knowledge base
@@ -207,7 +207,7 @@ fi
 </details>
 
 
-## 🧐 Evaluation
+## 🧐Evaluation
 All our models are evaluated on the excellent [OpenCompass](https://github.com/open-compass/opencompass) platform. We thank its authors for their great contribution to the community!
 
 Please refer to our paper for the detailed results. For the specific benchmarks, our settings are as follows. On **TruthfulQA**, we use the BLEU score to measure correctness in a 0-shot setting. For both **SimpleQA** and **ChineseSimpleQA**, we use `gpt-4o-mini` to judge the correctness of the answers; specifically for the English SimpleQA, we append the prompt "Let's think step by step" to elicit a reasoning process, while the Chinese version is kept as 0-shot. When evaluating on **GPQA**, we focus exclusively on the diamond subset and determine correctness by extracting the answer from a pre-defined output format, also using a 0-shot prompt. Lastly, the **AIME 2025** benchmark is also judged by `gpt-4o-mini` in a 0-shot setting.
