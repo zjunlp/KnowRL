@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/25xx.xxxxx">📄arXiv</a> •
-  <a href="https://huggingface.co/collections/your-org/your-collection-id">🤗HuggingFace</a> •
+  <a href="https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d">🤗HuggingFace</a> •
   <a href="https://github.com/your-repo/knowrl">💻Github</a>
 </p>
 
