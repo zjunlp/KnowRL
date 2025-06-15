@@ -210,28 +210,8 @@ fi
 ## 🧐 Evaluation
 All our models are evaluated on the excellent [OpenCompass](https://github.com/open-compass/opencompass) platform. We thank its authors for their great contribution to the community!
 
-Please refer to our paper for the detailed results. The specific settings for each benchmark are as follows:
+Please refer to our paper for the detailed results. For the specific benchmarks, our settings are as follows. On **TruthfulQA**, we use the BLEU score to measure correctness in a 0-shot setting. For both **SimpleQA** and **ChineseSimpleQA**, we use `gpt-4o-mini` to judge the correctness of the answers; specifically for the English SimpleQA, we append the prompt "Let's think step by step" to elicit a reasoning process, while the Chinese version is kept as 0-shot. When evaluating on **GPQA**, we focus exclusively on the diamond subset and determine correctness by extracting the answer from a pre-defined output format, also using a 0-shot prompt. Lastly, the **AIME 2025** benchmark is also judged by `gpt-4o-mini` in a 0-shot setting.
 
-**TruthfulQA**
-* **Metric:** We use the BLEU score to evaluate the correctness of the model's output.
-* **Prompting:** 0-shot.
-
-**SimpleQA**
-* **Judge:** `gpt-4o-mini` is used to determine the correctness of the answers.
-* **Prompting:** The prompt "Let's think step by step" is appended to the question to elicit a reasoning process.
-
-**ChineseSimpleQA**
-* **Judge:** `gpt-4o-mini`.
-* **Prompting:** 0-shot.
-
-**GPQA**
-* **Subset:** We exclusively test the diamond category.
-* **Method:** Correctness is determined by extracting the answer from a specific, pre-defined output format.
-* **Prompting:** 0-shot.
-
-**AIME 2025**
-* **Judge:** `gpt-4o-mini`.
-* **Prompting:** 0-shot.
 
 ## 🚩Citation
 If you find this work useful in your research, please consider citing our paper:
