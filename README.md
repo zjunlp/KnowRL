@@ -137,7 +137,7 @@ This stage uses the SFT-tuned model and further trains it with our knowledge-enh
 
 **a. Environment Variables in `train/train.sh`:**
 This script sets up all necessary environment variables and executes the training.
-   - Set your API keys for services like OpenAI/ZhipuAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
+   - Set your API keys for services like OpenAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
    - Set your `WANDB_API_KEY` for experiment tracking.
    - Ensure `FACTSCORE_DB_PATH` points to the `knowledge_base.db` file you created.
 
@@ -212,29 +212,24 @@ All our models are evaluated on the excellent [OpenCompass](https://github.com/o
 
 Please refer to our paper for the detailed results. The specific settings for each benchmark are as follows:
 
-### TruthfulQA
-
+**TruthfulQA**
 * **Metric:** We use the BLEU score to evaluate the correctness of the model's output.
 * **Prompting:** 0-shot.
 
-### SimpleQA
-
+**SimpleQA**
 * **Judge:** `gpt-4o-mini` is used to determine the correctness of the answers.
 * **Prompting:** The prompt "Let's think step by step" is appended to the question to elicit a reasoning process.
 
-### ChineseSimpleQA
-
+**ChineseSimpleQA**
 * **Judge:** `gpt-4o-mini`.
 * **Prompting:** 0-shot.
 
-### GPQA
-
+**GPQA**
 * **Subset:** We exclusively test the diamond category.
 * **Method:** Correctness is determined by extracting the answer from a specific, pre-defined output format.
 * **Prompting:** 0-shot.
 
-### AIME 2025
-
+**AIME 2025**
 * **Judge:** `gpt-4o-mini`.
 * **Prompting:** 0-shot.
 
