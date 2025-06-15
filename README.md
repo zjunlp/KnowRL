@@ -59,9 +59,9 @@ This is the easiest way to get started. We have hosted the pre-built `knowledge_
     cd train/reward_function/FActScore/build_knowledge/
 
     # Download the file from Google Drive and name it knowledge_base.db
-    gdown [https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI](https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI) -O knowledge_base.db
+    gdown https://drive.google.com/uc?id=1EVFkzuFvqE8AOEcdfSSm03vvvbVDa7bI
     ```
-    This command will download the database directly into the required folder.
+This command will download the database directly into the required folder.
 
 #### Option 2: Build from Scratch
 
