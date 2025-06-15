@@ -82,7 +82,7 @@ This will create the `knowledge_base.db` file required for the `fact_reward` fun
 
 
 ## 📉Training
-The training process is orchestrated by `train/train.sh`, which sets up environment variables and launches `main.py` using the configuration defined in `script/grpo.yaml`.
+The training process is orchestrated by `train/train.sh`, which sets up environment variables and launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, with Reinforcement Learning on 1×A800.
 
 ### 1. Configuration
 Before running, you need to configure the following:
