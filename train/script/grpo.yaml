@@ -1,5 +1,5 @@
 # Model parameters
-model_name_or_path: /disk2/rbc/sft-model/coldstart_3K/DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior_length_300-700-4epoch4
+model_name_or_path: "your_model_path/model_name" # Please replace with your model path
 model_revision: main
 torch_dtype: bfloat16
 lora_r: 256
@@ -7,16 +7,16 @@ lora_alpha: 512
 attn_implementation: flash_attention_2
 bf16: true
 tf32: true
-output_dir: output/DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior-4epoch4-num12-llama
+output_dir: "output/your_output_directory_name" # Please replace with your output directory
 
 # Dataset parameters
-dataset_id_or_path: ../data/rl/knowrl_RLdata.json
+dataset_id_or_path: "path/to/your/dataset.json" # Please replace with your dataset path
 
 # WandB parameters
 report_to: wandb
-wandb_project: DeepSeek-R1-Distill-Qwen-7B-coldstart_3K_nobehavior-4epoch4-num12-llama
-wandb_entity: rbc576625-zhejiang-university
-run_name: Qwen2.5-7B-r1
+wandb_project: "your_wandb_project_name" # Please replace with your WandB project name
+wandb_entity: "your_wandb_username" # Please replace with your WandB username or entity
+run_name: "your_run_name" # Please replace with your run name
 
 # Training parameters
 max_steps: 150
@@ -46,7 +46,7 @@ save_strategy: "steps"
 save_steps: 50
 resume_from_checkpoint: false
 
-# Configuration file paths 
+# Configuration file paths
 grpo_config_file: "./script/grpo.yaml"
 
 
