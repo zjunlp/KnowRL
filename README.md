@@ -91,7 +91,7 @@ Below is an example YAML configuration for running the SFT. You can adapt the pa
 ```yaml
 # llama_factory_sft.yaml
 ### model
-model_name_or_path: /path/to/your/base_model # e.g., /path/to/DeepSeek-R1-Distill-Qwen-7B
+model_name_or_path: /path/to/your/base_model 
 deepspeed: /path/to/your/ds_z3_config.json
 
 ### method
@@ -103,7 +103,7 @@ lora_rank: 256
 lora_alpha: 512
 
 ### dataset
-dataset: your_coldstart_dataset # e.g., coldstart_3K
+dataset: your_coldstart_dataset # e.g., knowrl_coldstart
 template: qwen
 cutoff_len: 3072
 overwrite_cache: true
@@ -206,8 +206,37 @@ fi
 ```
 </details>
 
-## 🧐Evaluation
-All our models are evaluated on the **OpenCompass** platform to ensure fair and reproducible results. Please refer to our paper for detailed results on benchmarks such as TruthfulQA, SimpleQA, GPQA, and AIME.
+
+## 🧐 Evaluation
+All our models are evaluated on the excellent [OpenCompass](https://github.com/open-compass/opencompass) platform. We thank its authors for their great contribution to the community!
+
+Please refer to our paper for the detailed results. The specific settings for each benchmark are as follows:
+
+### TruthfulQA
+
+* **Metric:** We use the BLEU score to evaluate the correctness of the model's output.
+* **Prompting:** 0-shot.
+
+### SimpleQA
+
+* **Judge:** `gpt-4o-mini` is used to determine the correctness of the answers.
+* **Prompting:** The prompt "Let's think step by step" is appended to the question to elicit a reasoning process.
+
+### ChineseSimpleQA
+
+* **Judge:** `gpt-4o-mini`.
+* **Prompting:** 0-shot.
+
+### GPQA
+
+* **Subset:** We exclusively test the diamond category.
+* **Method:** Correctness is determined by extracting the answer from a specific, pre-defined output format.
+* **Prompting:** 0-shot.
+
+### AIME 2025
+
+* **Judge:** `gpt-4o-mini`.
+* **Prompting:** 0-shot.
 
 ## 🚩Citation
 If you find this work useful in your research, please consider citing our paper:
