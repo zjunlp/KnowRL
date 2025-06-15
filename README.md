@@ -8,8 +8,9 @@
   <a href="https://huggingface.co/datasets/zjunlp/KnowRL-Train-Data">📖Datasets</a>
 </p>
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![](https://img.shields.io/github/last-commit/your-repo/knowrl?color=green)
+[![Awesome](https://awesome.re/badge.svg)](https://github.com/zjunlp/KnowRL)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub last commit](https://img.shields.io/github/last-commit/zjunlp/KnowRL?color=green)](https://github.com/zjunlp/KnowRL)
 
 </div>
 
