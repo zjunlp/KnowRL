@@ -28,7 +28,7 @@
 ## 🌻Acknowledgement
 Our Cold-Start SFT stage is implemented based on the excellent [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework. We thank its authors for their great contribution!
 
-![KnowRL Framework](https://i.imgur.com/8zD3XfX.png)
+![alt text](./assets/framework.pdf)
 
 ## 🌟Overview
 Large Language Models (LLMs), particularly slow-thinking models, often exhibit severe hallucinations due to an inability to accurately recognize their knowledge boundaries. To address this, we propose **KnowRL**, a novel framework that integrates external knowledge into the reinforcement learning process. KnowRL guides models to perform fact-based slow thinking by incorporating a factuality reward directly into the RL training loop. This helps models learn their knowledge boundaries and fosters a more reliable, fact-based reasoning process, effectively mitigating hallucinations while maintaining or enhancing strong reasoning capabilities.
