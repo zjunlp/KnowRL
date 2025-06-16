@@ -130,7 +130,7 @@ ddp_timeout: 180000000
 ```
 To run the SFT, you would use a command like:
 ```bash
-CUDA_VISIBLE_DEVICES=0,1 llama-factory-cli train llama_factory_sft.yaml
+CUDA_VISIBLE_DEVICES=0,1,2,3 llama-factory-cli train llama_factory_sft.yaml
 ```
 
 ### Stage 2: Knowledgeable Reinforcement Learning (RL)
