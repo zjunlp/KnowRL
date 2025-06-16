@@ -1,6 +1,6 @@
 <div align="center">
 <h1 align="center"> KnowRL </h1>
-<h3 align="center"> Knowledgeable Reinforcement Learning for Factuality </h3>
+<h3 align="center"> Exploring Knowledgeable Reinforcement Learning for Factuality </h3>
 
 <p align="center">
   <a href="https://arxiv.org/abs/25xx.xxxxx">📄arXiv</a> •
