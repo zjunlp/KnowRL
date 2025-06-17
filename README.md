@@ -10,7 +10,7 @@
 
 [![Awesome](https://awesome.re/badge.svg)](https://github.com/zjunlp/KnowRL)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![GitHub last commit](https://img.shields.io/github/last-commit/zjunlp/KnowRL?color=green)](https://github.com/zjunlp/KnowRL)
+![](https://img.shields.io/github/last-commit/zjunlp/KnowRL?color=green)
 
 </div>
 
