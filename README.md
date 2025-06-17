@@ -9,7 +9,7 @@
 </p>
 
 [![Awesome](https://awesome.re/badge.svg)](https://github.com/zjunlp/KnowRL)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![GitHub last commit](https://img.shields.io/github/last-commit/zjunlp/KnowRL?color=green)](https://github.com/zjunlp/KnowRL)
 
 </div>
