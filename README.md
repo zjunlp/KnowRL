@@ -221,9 +221,6 @@ If you find this work useful in your research, please consider citing our paper:
   title={{KnowRL: Exploring Knowledgeable Reinforcement Learning for Factuality}}, 
   author={Ren, Baochang and Qiao, Shuofei and Yu, Wenhao and Chen, Huajun and Zhang, Ningyu},
   journal={arXiv preprint arXiv:2506.19807},
-  year={2025},
-  eprint={2506.19807},
-  archivePrefix={arXiv},
-  url={https://arxiv.org/abs/2506.19807}
+  year={2025}
 }
 ```
