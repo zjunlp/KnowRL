@@ -3,7 +3,7 @@
 <h3 align="center"> Exploring Knowledgeable Reinforcement Learning for Factuality </h3>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/25xx.xxxxx">📄arXiv</a> •
+  <a href="https://arxiv.org/abs/2506.19807">📄arXiv</a> •
   <a href="https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d">🤗HuggingFace</a> •
   <a href="https://huggingface.co/datasets/zjunlp/KnowRL-Train-Data">📖Datasets</a>
 </p>
