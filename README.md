@@ -217,10 +217,13 @@ Please refer to our paper for the detailed results. For the specific benchmarks,
 ## 🚩Citation
 If you find this work useful in your research, please consider citing our paper:
 ```bibtex
-@inproceedings{ren2025knowrl,
-    title={{KnowRL}: Exploring Knowledgeable Reinforcement Learning for Factuality},
-    author={Baochang Ren and Shuofei Qiao and Wenhao Yu and Huajun Chen and Ningyu Zhang},
-    booktitle={EMNLP 2025},
-    year={2025}
+@article{ren2025knowrl,
+  title={{KnowRL: Exploring Knowledgeable Reinforcement Learning for Factuality}}, 
+  author={Ren, Baochang and Qiao, Shuofei and Yu, Wenhao and Chen, Huajun and Zhang, Ningyu},
+  journal={arXiv preprint arXiv:2506.19807},
+  year={2025},
+  eprint={2506.19807},
+  archivePrefix={arXiv},
+  url={https://arxiv.org/abs/2506.19807}
 }
 ```
