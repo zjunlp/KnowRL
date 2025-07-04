@@ -831,20 +831,14 @@ class GRPOTrainer(Trainer):
                     reward_inputs = super()._prepare_inputs(reward_inputs)
                     with torch.inference_mode():
                         rewards_per_func[:, i] = reward_func(**reward_inputs).logits[:, 0]  # Shape (B*G,)
-                else:#+++++++++++++++++++++++++增加reward_func参数+++++++++++++++++++++++++++++++
+                else:
                     # Repeat all input columns (but "prompt" and "completion") to match the number of generations
                     keys = [key for key in inputs[0] if key not in ["prompt", "completion"]]
                     reward_kwargs = {key: [example[key] for example in inputs] for key in keys}
 
-
-
-                    # 添加训练步数参数 ，self.state.global_step 获取
                     reward_kwargs["train_step"] = self.state.global_step
-                    # 添加设定的总训练步数参数（假定在 args 中设置了 max_steps）
                     if hasattr(self.args, "max_steps"):
                         reward_kwargs["max_train_steps"] = self.args.max_steps
-
-
 
                     output_reward_func = reward_func(prompts=prompts, completions=completions, **reward_kwargs)
                     rewards_per_func[:, i] = torch.tensor(output_reward_func, dtype=torch.float32, device=device)
