@@ -39,9 +39,7 @@ class FactScorer:
         quantization_type=None,
         verbose=False,
         device=None,
-        dedicated_gpu_id=None, 
-        limit_memory_fraction=0.5,
-        deep_clean_interval=20000,
+        dedicated_gpu_id=None,
     ):
         """
         Initialize fact scorer
@@ -70,9 +68,6 @@ class FactScorer:
             print(f"Model name: {self.model_name}")
 
         # Cache control parameters
-        self.max_cache_size = 10000
-        self.fact_counter = 0
-        self.deep_clean_interval = deep_clean_interval
         self.sentence_cache = {}
         self.nli_cache = {}
         self.cache_hits = 0
@@ -111,13 +106,11 @@ class FactScorer:
 
         # GPU resource management
         self.dedicated_gpu_id = dedicated_gpu_id
-        self.limit_memory_fraction = limit_memory_fraction
         
         if dedicated_gpu_id is not None and torch.cuda.is_available():
             if torch.cuda.device_count() > dedicated_gpu_id:
-                print(f"Locking GPU {dedicated_gpu_id}, memory limit: {limit_memory_fraction}")
+                print(f"Using GPU {dedicated_gpu_id}")
                 torch.cuda.set_device(dedicated_gpu_id)
-                torch.cuda.set_per_process_memory_fraction(limit_memory_fraction, dedicated_gpu_id)
                 self.device = torch.device(f"cuda:{dedicated_gpu_id}")
         
         # Device setting
@@ -222,8 +215,6 @@ class FactScorer:
                 if torch.cuda.get_device_capability(self.device.index)[0] >= 7:
                     model = model.half()
                     logging.info("Using FP16 acceleration for NLI model")
-                
-                torch.cuda.set_per_process_memory_fraction(0.8, self.device.index)
             
             model.config.use_cache = True
             model = model.to(self.device)
@@ -350,7 +341,6 @@ class FactScorer:
                 
                 del outputs
                 del inputs
-                torch.cuda.empty_cache()
         
         if not all_probs:
             result = (False, 0.0, None)
@@ -386,28 +376,6 @@ class FactScorer:
             self.nli_cache[cache_key] = result
         
         return result
-
-    def _clean_cache(self):
-        """Enhanced cache cleaning helper method"""
-        if len(self.nli_cache) > self.max_cache_size:
-            keys_to_remove = list(self.nli_cache.keys())[:(len(self.nli_cache) // 2)]
-            for key in keys_to_remove:
-                del self.nli_cache[key]
-            
-            if self.verbose:
-                logging.info(f"Cache hit rate: {self.cache_hits/(self.cache_hits + self.cache_misses):.2%}")
-                logging.info(f"Cache size: {len(self.nli_cache)}")
-            
-            self.cache_hits = 0
-            self.cache_misses = 0
-            
-        if hasattr(self, 'sentence_cache') and len(self.sentence_cache) > self.max_cache_size // 2:
-            self.sentence_cache.clear()
-                
-        import gc
-        gc.collect()
-        if torch.cuda.is_available():
-            torch.cuda.empty_cache()
 
     def _is_fact_supported_by_text_nli(self, atomic_fact, passage_text, use_sentence_splitting=False, device=None):
         """
@@ -734,10 +702,6 @@ class FactScorer:
             else:
                 topics_iter = zip(topics, generations, atomic_facts)
                 
-            # Counter for periodic cache cleaning
-            samples_processed = 0
-            clean_cache_interval = 50
-                
             for i, (topic, generation, facts) in enumerate(topics_iter):
                 if facts is None:
                     decisions = []
@@ -786,34 +750,16 @@ class FactScorer:
                     out["init_score"] = np.mean([d["is_supported"] for d in decisions])
                         
                 out_list.append(out)
-                
-                samples_processed += 1
-                
-                # Periodic cache and memory cleanup
-                if samples_processed % clean_cache_interval == 0:
-                    self._clean_cache()
-                    
-                if torch.cuda.is_available() and i % 10 == 0:
-                    torch.cuda.empty_cache()
                     
             # Save cache and print time statistics
             self.save_cache()
             print("Total time statistics:", total_time_dict)
-            
-            if hasattr(self, 'nli_cache'):
-                self._clean_cache()
             
             return out_list[0] if len(out_list) == 1 else out_list
             
         except Exception as e:
             logging.error(f"Scoring error: {e}")
             raise
-            
-        finally:
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
-            import gc
-            gc.collect()
 
     def _get_score(self, topic, generation, atomic_facts, knowledge_source, cost_estimate=None):
         """
@@ -923,53 +869,6 @@ class FactScorer:
                     "supporting_sentence": best_supporting_sentence,
                     "passages": passages
                 })
-                
-                self.fact_counter += 1
-
-                # Regular cleanup: lightweight cleanup every 10 atomic facts
-                if self.fact_counter % 1000 == 0 and torch.cuda.is_available():
-                    torch.cuda.empty_cache()
-                    
-                # Deep cleanup: thorough cleanup every specified number of atomic facts
-                if self.fact_counter % self.deep_clean_interval == 0:
-                    if self.verbose:
-                        print(f"Performing deep cleanup at atomic fact #{self.fact_counter}...")
-                    
-                    # Save current cache to disk if cache directory exists
-                    if self.cache_dir:
-                        cache_path = os.path.join(self.cache_dir, "nli_cache.pt")
-                        try:
-                            torch.save(self.nli_cache, cache_path)
-                            if self.verbose:
-                                print(f"Saved NLI cache to {cache_path}")
-                        except Exception as e:
-                            logging.warning(f"Failed to save NLI cache: {e}")
-                    
-                    # Clean various caches
-                    self.nli_cache.clear()
-                    self.sentence_cache.clear()
-                    self.cache_hits = 0
-                    self.cache_misses = 0
-                    
-                    # Reinitialize NLI model
-                    if self.optimized_model is not None:
-                        current_device = self.device
-                        
-                        del self.optimized_model
-                        del self.optimized_tokenizer
-                        self.optimized_model = None
-                        self.optimized_tokenizer = None
-                        
-                        import gc
-                        gc.collect()
-                        
-                        if torch.cuda.is_available():
-                            torch.cuda.empty_cache()
-                            
-                        self._optimize_nli_model()
-                        
-                        if self.verbose:
-                            print("Reinitialized NLI model")
             
             nli_time = time.time() - nli_time_start
             nli_total_time = nli_time
