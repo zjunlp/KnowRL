@@ -13,10 +13,9 @@ output_dir: "output/your_output_directory_name" # Please replace with your outpu
 dataset_id_or_path: "path/to/your/dataset.json" # Please replace with your dataset path
 
 # WandB parameters
-report_to: wandb
-wandb_project: "your_wandb_project_name" # Please replace with your WandB project name
-wandb_entity: "your_wandb_username" # Please replace with your WandB username or entity
-run_name: "your_run_name" # Please replace with your run name
+report_to: swanlab
+swanlab_project: "your_swanlab_project_name" # Please replace with your Swanlab project name
+swanlab_experiment_name:: "your_swanlab_experiment_name" # Please replace with your Swanlab experiment name
 
 # Training parameters
 max_steps: 150
