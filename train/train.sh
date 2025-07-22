@@ -7,8 +7,7 @@ export OPENAI_BASE_URL_FACTSCORE="https://api.openai.com/v1"
 export OPENAI_API_KEY_JUDGE="your_openai_api_key_here"
 export OPENAI_API_BASE_JUDGE="https://api.openai.com/v1"
 
-export WANDB_API_KEY="your_wandb_api_key_here"
-export WANDB_MODE="offline" ## Optional
+export SWANLAB_API_KEY="your_swanlab_api_key_here"
 # ============================================================================
 # Configuration
 # ============================================================================
