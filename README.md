@@ -139,7 +139,7 @@ This stage uses the SFT-tuned model and further trains it with our knowledge-enh
 **a. Environment Variables in `train/train.sh`:**
 This script sets up all necessary environment variables and executes the training.
    - Set your API keys for services like OpenAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
-   - Set your `WANDB_API_KEY` for experiment tracking.
+   - Set your `SWANLAB_API_TOKEN` for experiment tracking.
    - Ensure `FACTSCORE_DB_PATH` points to the `knowledge_base.db` file you created.
 
 **b. Training Parameters in `script/grpo.yaml`**
@@ -147,7 +147,7 @@ This file contains all hyperparameters for the RL stage.
    - `model_name_or_path`: Path to the base model for RL training (this should be your SFT-tuned model).
    - `dataset_id_or_path`: Path to your RL training data.
    - `output_dir`: Directory to save the final trained model.
-   - `wandb_project`, `wandb_entity`, `run_name`: WandB configuration.
+   - `swanlab_project`, `swanlab_experiment_name`: SwanLab configuration.
    - `per_device_train_batch_size`, `learning_rate`, `max_steps`: Standard training hyperparameters.
    - `beta`, `num_generations`: GRPO-specific algorithm parameters.
 
@@ -174,8 +174,7 @@ export OPENAI_BASE_URL_FACTSCORE="[https://api.openai.com/v1](https://api.openai
 export OPENAI_API_KEY_JUDGE="your_openai_api_key_here"
 export OPENAI_API_BASE_JUDGE="[https://api.openai.com/v1](https://api.openai.com/v1)"
 
-export WANDB_API_KEY="your_wandb_api_key_here"
-export WANDB_MODE="offline" ## Optional: set to "online" to sync
+export SWANLAB_API_KEY="your_swanlab_api_key_here"
 # ============================================================================
 # Configuration
 # ============================================================================
