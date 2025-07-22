@@ -31,7 +31,7 @@ def get_output_timestamp():
 
 def get_reward_output_dir():
     yaml_config = load_yaml_config()
-    project_name = yaml_config.get("wandb_project", "default_project")
+    project_name = yaml_config.get("swanlab_project", "default_project")
     
     timestamp = get_output_timestamp()
     output_dir = os.path.join("reward_outputs", project_name, timestamp)
