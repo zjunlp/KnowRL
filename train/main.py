@@ -17,7 +17,7 @@ from reward_function import (
     CombinedScorer,
     get_reward_output_dir
 )
-from utils import initialize_wandb_from_yaml, setup_logging, get_default_config_path
+from utils import create_swanlab_callback_from_yaml, setup_logging, get_default_config_path
 
 # Setup logging
 logger = setup_logging()
@@ -40,13 +40,6 @@ class DatasetArguments:
     dataset_splits: str = "train"
     tokenizer_name_or_path: str = None
     field_mapping: DatasetFieldMapping = field(default_factory=DatasetFieldMapping)
-
-
-
-
-
-
-
 
 def get_checkpoint(training_args: GRPOConfig):
     last_checkpoint = None
@@ -232,14 +225,16 @@ def grpo_function(
 def main():
     parser = TrlParser((ModelConfig, DatasetArguments, GRPOConfig))
     model_args, dataset_args, training_args = parser.parse_args_and_config()
+    
     config_file_path = get_default_config_path()
-    wandb_instance = initialize_wandb_from_yaml(config_file_path)
-    if wandb_instance:
-        logger.info("WandB is set up. You can now use wandb.log() in the training loop.")
+    swanlab_callback = create_swanlab_callback_from_yaml(config_file_path)
+    
+    if swanlab_callback:
+        logger.info("SwanLab callback created successfully. Training metrics will be logged to SwanLab.")
+        callbacks = [swanlab_callback]
     else:
-        logger.info("WandB initialization failed or not enabled.")
-
-    callbacks = None
+        logger.info("SwanLab callback creation failed or not enabled. Training will proceed without SwanLab logging.")
+        callbacks = None
 
     grpo_function(model_args, dataset_args, training_args, callbacks=callbacks)
 
