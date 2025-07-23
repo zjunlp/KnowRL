@@ -133,7 +133,7 @@ To run the SFT, you would use a command like:
 CUDA_VISIBLE_DEVICES=0,1,2,3 llama-factory-cli train llama_factory_sft.yaml
 ```
 
-### Stage 2: Knowledgeable Reinforcement Learning (RL)
+### Stage 2: Knowledgeable Reinforcement Learning 
 This stage uses the SFT-tuned model and further trains it with our knowledge-enhanced reward signal. The process is orchestrated by `train/train.sh`, which launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, on 1×A800 GPU.
 
 **a. Environment Variables in `train/train.sh`:**
