@@ -10,7 +10,7 @@ tf32: true
 output_dir: "output/your_output_directory_name" # Please replace with your output directory
 
 # Dataset parameters
-dataset_id_or_path: "path/to/your/dataset.json" # Please replace with your dataset path
+dataset_id_or_path: ../data/rl/knowrl_RLdata.json 
 
 # Swanlab parameters
 report_to: swanlab
