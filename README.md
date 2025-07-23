@@ -139,7 +139,7 @@ This stage uses the SFT-tuned model and further trains it with our knowledge-enh
 **a. Environment Variables in `train/train.sh`:**
 This script sets up all necessary environment variables and executes the training.
    - Set your API keys for services like OpenAI (`OPENAI_API_KEY_FACTSCORE`, `OPENAI_API_KEY_JUDGE`).
-   - Set your `SWANLAB_API_TOKEN` for experiment tracking.
+   - Set your `SWANLAB_API_KEY` for experiment tracking.
    - Ensure `FACTSCORE_DB_PATH` points to the `knowledge_base.db` file you created.
 
 **b. Training Parameters in `script/grpo.yaml`**
