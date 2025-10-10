@@ -81,59 +81,10 @@ This will create the `knowledge_base.db` file required for the `fact_reward` fun
 
 
 ## 📉Training
-Our training process consists of two main stages: a Cold-Start Supervised Fine-Tuning (SFT) phase to align the model with factual thinking patterns, followed by the Knowledgeable Reinforcement Learning (RL) phase to enhance factuality. Also, our datasets and models have been uploaded to [huggingface](https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d).
+We utilize a Knowledgeable Reinforcement Learning (RL) phase to enhance the model's factuality. Also, our datasets and models have been uploaded to [huggingface](https://huggingface.co/collections/zjunlp/knowrl-68485613feca77696d252a1d).
 
-### Stage 1: Cold-Start SFT
-This initial stage fine-tunes the base model on a high-quality dataset of fact-based question-answering pairs. This pre-aligns the model, making the subsequent RL training more stable and effective. We use the [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework for this stage.
 
-**Example LLaMA-Factory SFT Command:**
-Below is an example YAML configuration for running the SFT. You can adapt the parameters for your specific setup.
-
-```yaml
-# llama_factory_sft.yaml
-### model
-model_name_or_path: /path/to/your/base_model 
-deepspeed: /path/to/your/ds_z3_config.json
-
-### method
-stage: sft
-do_train: true
-finetuning_type: lora
-lora_target: q_proj,v_proj
-lora_rank: 256
-lora_alpha: 512
-
-### dataset
-dataset: your_coldstart_dataset # e.g., knowrl_coldstart
-template: qwen
-cutoff_len: 3072
-overwrite_cache: true
-preprocessing_num_workers: 16
-
-### output
-output_dir: /path/to/your/output_adapter # e.g., /adapter-saves/MyModel-SFT
-logging_steps: 10
-save_steps: 500
-plot_loss: true
-overwrite_output_dir: true
-save_strategy: 'no'
-
-### train
-per_device_train_batch_size: 2
-gradient_accumulation_steps: 1
-learning_rate: 1.0e-4
-num_train_epochs: 4.0
-lr_scheduler_type: cosine
-warmup_ratio: 0.1
-fp16: true
-ddp_timeout: 180000000
-```
-To run the SFT, you would use a command like:
-```bash
-CUDA_VISIBLE_DEVICES=0,1,2,3 llama-factory-cli train llama_factory_sft.yaml
-```
-
-### Stage 2: Knowledgeable Reinforcement Learning 
+### Knowledgeable Reinforcement Learning 
 This stage uses the SFT-tuned model and further trains it with our knowledge-enhanced reward signal. The process is orchestrated by `train/train.sh`, which launches `main.py` using the configuration defined in `script/grpo.yaml`. We are training two 7B models, `DeepSeek-R1-Distill-Qwen-7B` and `Skywork-OR1-7B-Preview`, on 1×A800 GPU.
 
 **a. Environment Variables in `train/train.sh`:**
@@ -206,11 +157,6 @@ fi
 ```
 </details>
 
-
-## 🧐Evaluation
-All our models are evaluated on the excellent [OpenCompass](https://github.com/open-compass/opencompass) platform. We thank its authors for their great contribution to the community!
-
-Please refer to our paper for the detailed results. For the specific benchmarks, our settings are as follows. On **TruthfulQA**, we use the BLEU score to measure correctness in a 0-shot setting. For both **SimpleQA** and **ChineseSimpleQA**, we use `gpt-4o-mini` to judge the correctness of the answers; specifically for the English SimpleQA, we append the prompt "Let's think step by step" to elicit a reasoning process, while the Chinese version is kept as 0-shot. When evaluating on **GPQA**, we focus exclusively on the diamond subset and determine correctness by extracting the answer from a pre-defined output format, also using a 0-shot prompt. Lastly, the **AIME 2025** benchmark is also judged by `gpt-4o-mini` in a 0-shot setting.
 
 
 ## 🚩Citation
