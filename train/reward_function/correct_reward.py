@@ -28,54 +28,12 @@ class RewardEvaluator:
         self.model_name = "gpt-4o-mini"
         logger.info(f"Using model: {self.model_name}")
         
-        # Define refusal patterns
-        self.refusal_patterns = [
-            r"(?i)\b(I cannot|I can't|I am unable to)\s+(answer|respond|provide|give|tell|assist|help)\b",
-            r"(?i)\b(cannot|can't|unable to)\s+(answer|respond|provide|give|tell|assist|help)\b",
-            r"(?i)\b(I must|I have to|I will have to|I need to)\b(.*?)\b(decline|refuse|refrain from|abstain from)\b\s+(answering|responding|providing|giving)\b",
-            r"(?i)\b(as an AI|as a language model|as an assistant),?\s+I\s+(cannot|can't|am unable to|must decline|am not able to|don't have|won't)\b",
-            r"(?i)\b(ethical|moral|legal)\b(.*?)\b(concerns|issues|considerations|limitations|constraints)\b(.*?)\b(prevent|stop|preclude|prohibit|disallow)\b",
-            r"(?i)\b(would need more|need more|require more|need additional|require additional)\s+(information|details|context|specifics|clarification)\s+to\s+(answer|respond|provide|help|assist)\b",
-            r"(?i)\b(insufficient information|lack of information|lack of context|lack of details|not enough information|not enough context|too vague)\s+to\s+(answer|respond|provide|give|help|assist)\b",
-            r"(?i)\b(more information|additional information|more context|additional context|more details|additional details)\s+would be\s+(needed|required|necessary)\b"
-        ]
         
-        # Define common stop words for keyword extraction
-        self.stop_words = {
-            'the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 
-            'in', 'on', 'at', 'to', 'for', 'with', 'by', 'about', 'like', 
-            'from', 'of', 'that', 'this', 'these', 'those', 'it', 'they', 
-            'he', 'she', 'we', 'you', 'i', 'me', 'my', 'your', 'our', 'their'
-        }
-        
-    def is_refusal_response(self, text: str) -> bool:
-        if not text or text.isspace():
-            return True
-        
-        for pattern in self.refusal_patterns:
-            if re.search(pattern, text):
-                return True
-        
-        return False
-        
-    def contains_numbers(self, text: str) -> bool:
-        return bool(re.search(r'\d', text))
-        
-    def has_partial_match(self, answer: str, best_answer: str) -> bool:
-        if not best_answer or not answer:
-            return False
-        
-        best_answer_words = set()
-        for word in re.findall(r'\w+', best_answer):
-            if word.lower() not in self.stop_words and len(word) > 1:
-                best_answer_words.add(word.lower())
-        
-        answer_lower = answer.lower()
-        for word in best_answer_words:
-            if word in answer_lower:
-                return True
-        
-        return False
+    def reset_refusal_flags(self):
+        self.refusal_flags = []
+
+    def get_refusal_flags(self):
+        return self.refusal_flags
     
     def get_score(self, question: str, answer: str, best_answer: Optional[str] = None, prompt_template: Optional[str] = None):
         try:
@@ -124,14 +82,14 @@ class RewardEvaluator:
                 elif re.search(incorrect_pattern, answer_content):
                     score = -1.0
                 elif re.search(not_attempted_pattern, answer_content):
-                    score = -1.0
+                    score = 1.0
                 else:
                     if re.search(correct_pattern, response_text):
                         score = 2.0
                     elif re.search(incorrect_pattern, response_text):
                         score = -1.0
                     elif re.search(not_attempted_pattern, response_text):
-                        score = -1.0
+                        score = 1.0
                     else:
                         logger.warning(f"Unrecognized scoring result: '{raw_response_text}'")
                         score = 0.0
@@ -141,7 +99,7 @@ class RewardEvaluator:
                 elif re.search(incorrect_pattern, response_text):
                     score = -1.0
                 elif re.search(not_attempted_pattern, response_text):
-                    score = -1.0
+                    score = 1.0
                 else:
                     logger.warning(f"Unrecognized scoring result: '{raw_response_text}'")
                     score = 0.0
@@ -152,10 +110,12 @@ class RewardEvaluator:
             logger.error(f"LLM scoring error: {str(e)}")
             return 0.0, f"ERROR: {str(e)}"
 
+
 def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer: Optional[List[str]] = None, 
                         qwestion: Optional[List[str]] = None, **kwargs) -> List[float]:
     rewards = []
     log_entries = []
+    refusal_flags = []  
 
     judge_llm = RewardEvaluator(
         api_key=os.environ.get("OPENAI_API_KEY_JUDGE"),
@@ -168,12 +128,14 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
             match = re.search(r"<answer>(.*?)</answer>", completion, re.DOTALL)
             if match is None:
                 rewards.append(-1)
+                refusal_flags.append(False)  
                 log_entries.append({
                     "sample_index": i,
                     "prompt": prompt,
                     "completion": completion,
                     "error": "answer tag not found",
                     "reward": -1,
+                    "is_refusal": False,
                     "judge_llm_response": "N/A",
                     "timestamp": get_timestamp()
                 })
@@ -182,12 +144,14 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
 
             if not predicted_answer or predicted_answer.isspace():
                 rewards.append(-1)
+                refusal_flags.append(False)  
                 log_entries.append({
                     "sample_index": i,
                     "prompt": prompt,
                     "completion": completion,
                     "error": "empty content in answer tag",
                     "reward": -1,
+                    "is_refusal": False,
                     "raw_llm_response": "N/A",
                     "timestamp": get_timestamp()
                 })
@@ -196,75 +160,17 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
             best_ans = best_answer[i] if best_answer and i < len(best_answer) else None
             question = qwestion[i] if qwestion and i < len(qwestion) else prompt
 
-            # Step 1: Refusal detection
-            if judge_llm.is_refusal_response(predicted_answer):
-                reward = -1.0
-                rewards.append(reward)
-                log_entries.append({
-                    "sample_index": i,
-                    "prompt": prompt,
-                    "question": question,
-                    "completion": completion,
-                    "used_answer": predicted_answer,
-                    "best_answer": best_ans,
-                    "eval_method": "refusal_detection",
-                    "reward": reward,
-                    "timestamp": get_timestamp()
-                })
-                continue
             
-            # Step 2: Check if best answer contains numbers
-            if best_ans and judge_llm.contains_numbers(best_ans):
-                score, response_text = judge_llm.get_score(
-                    question,
-                    predicted_answer,
-                    best_ans,
-                    prompt_template=LLM_EVAL_PROMPT
-                )
-                
-                reward = score
-                rewards.append(reward)
-                
-                log_entries.append({
-                    "sample_index": i,
-                    "prompt": prompt,
-                    "question": question,
-                    "completion": completion,
-                    "used_answer": predicted_answer,
-                    "best_answer": best_ans,
-                    "eval_method": "llm_eval_numeric",
-                    "llm_score": score,
-                    "judge_llm_response": response_text,
-                    "reward": reward,
-                    "timestamp": get_timestamp()
-                })
-                continue
-            
-            # Step 3: Partial match detection
-            if best_ans and not judge_llm.has_partial_match(predicted_answer, best_ans):
-                reward = -1.0
-                rewards.append(reward)
-                
-                log_entries.append({
-                    "sample_index": i,
-                    "prompt": prompt,
-                    "question": question,
-                    "completion": completion,
-                    "used_answer": predicted_answer,
-                    "best_answer": best_ans,
-                    "eval_method": "keyword_mismatch",
-                    "reward": reward,
-                    "timestamp": get_timestamp()
-                })
-                continue
-            
-            # Step 4: Only use LLM evaluation when there's a partial match
             score, response_text = judge_llm.get_score(
                 question,
                 predicted_answer,
                 best_ans,
                 prompt_template=LLM_EVAL_PROMPT
             )
+            
+           
+            is_refusal = (score == 1.0)
+            refusal_flags.append(is_refusal)
             
             reward = score
             rewards.append(reward)
@@ -276,8 +182,9 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
                 "completion": completion,
                 "used_answer": predicted_answer,
                 "best_answer": best_ans,
-                "eval_method": "llm_eval_after_partial_match",
+                "eval_method": "direct_llm_eval",
                 "llm_score": score,
+                "is_refusal": is_refusal,
                 "judge_llm_response": response_text,
                 "reward": reward,
                 "timestamp": get_timestamp()
@@ -286,15 +193,29 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
         except Exception as e:
             logger.error(f"Evaluation error: {str(e)}")
             rewards.append(0.0)
+            refusal_flags.append(False)
             log_entries.append({
                 "sample_index": i,
                 "prompt": prompt,
                 "completion": completion,
                 "error": str(e),
+                "is_refusal": False,
                 "judge_llm_response": "ERROR",
                 "reward": 0.0,
                 "timestamp": get_timestamp()
             })
 
     save_json_output({"llm_eval_results": log_entries}, "llm_eval_reward")
+    
+
+    global _last_refusal_flags
+    _last_refusal_flags = refusal_flags
+    
     return rewards
+
+
+_last_refusal_flags = []
+
+def get_last_refusal_flags():
+    global _last_refusal_flags
+    return _last_refusal_flags
