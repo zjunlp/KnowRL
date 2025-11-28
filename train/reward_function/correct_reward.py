@@ -25,7 +25,8 @@ class RewardEvaluator:
             self.client = OpenAI(api_key=api_key, base_url=api_base)
             self.use_api_manager = False
             
-        self.model_name = "gpt-4o-mini"
+        self.model_name = os.environ.get("LLM_EVAL_MODEL") or os.environ.get("REWARD_MODEL_NAME", "gpt-4o-mini")
+        
         logger.info(f"Using model: {self.model_name}")
         
         
@@ -115,7 +116,7 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
                         qwestion: Optional[List[str]] = None, **kwargs) -> List[float]:
     rewards = []
     log_entries = []
-    refusal_flags = []  
+    refusal_flags = [] 
 
     judge_llm = RewardEvaluator(
         api_key=os.environ.get("OPENAI_API_KEY_JUDGE"),
@@ -128,7 +129,7 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
             match = re.search(r"<answer>(.*?)</answer>", completion, re.DOTALL)
             if match is None:
                 rewards.append(-1)
-                refusal_flags.append(False)  
+                refusal_flags.append(False) 
                 log_entries.append({
                     "sample_index": i,
                     "prompt": prompt,
@@ -144,7 +145,7 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
 
             if not predicted_answer or predicted_answer.isspace():
                 rewards.append(-1)
-                refusal_flags.append(False)  
+                refusal_flags.append(False) 
                 log_entries.append({
                     "sample_index": i,
                     "prompt": prompt,
@@ -160,7 +161,7 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
             best_ans = best_answer[i] if best_answer and i < len(best_answer) else None
             question = qwestion[i] if qwestion and i < len(qwestion) else prompt
 
-            
+
             score, response_text = judge_llm.get_score(
                 question,
                 predicted_answer,
@@ -168,7 +169,6 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
                 prompt_template=LLM_EVAL_PROMPT
             )
             
-           
             is_refusal = (score == 1.0)
             refusal_flags.append(is_refusal)
             
@@ -207,12 +207,10 @@ def llm_eval_reward_func(prompts: List[str], completions: List[str], best_answer
 
     save_json_output({"llm_eval_results": log_entries}, "llm_eval_reward")
     
-
     global _last_refusal_flags
     _last_refusal_flags = refusal_flags
     
     return rewards
-
 
 _last_refusal_flags = []
 
