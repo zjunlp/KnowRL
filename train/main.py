@@ -73,12 +73,12 @@ def generate_prompt(example, tokenizer):
     
     prompt_prefix = [
         {
-            "role": "user", 
-            "content": f"{question}\n\nAnswer this question using the following format strictly:\n\n1. First use <think> </think> tags to show your step-by-step reasoning process.\n2. Then use <answer> </answer> tags for your final answer.\n\nExample format:\n<think>\nI need to consider these aspects...\nLooking at the evidence...\nAnalyzing step-by-step...\n</think>\n\n<answer>\nMy final, factual answer based on careful reasoning.\n</answer>\n\nImportant: Both tags must be on their own lines and your response must follow this exact format."
+            "role": "system",
+            "content": "Answer this question using the following format strictly:\n\n1. First use <think> </think> tags to show your step-by-step reasoning process.\n2. Then use <answer> </answer> tags for your final answer. Use your factual knowledge to iteratively verify your reasoning and derive the answer. If you genuinely do not know the answer, you can reply exactly with: I don't know."
         },
         {
-            "role": "assistant",
-            "content": "I'll answer following the required format. Let me analyze this question step by step.\n\n<think>",
+            "role": "user",
+            "content": question
         },
     ]
 
