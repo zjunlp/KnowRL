@@ -21,7 +21,6 @@
 - [🔧Installation](#installation)
 - [📚Knowledge Base Construction](#knowledge-base-construction)
 - [📉Training](#training)
-- [🧐Evaluation](#evaluation)
 - [🚩Citation](#citation)
 
 ---
