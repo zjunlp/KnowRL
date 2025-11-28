@@ -45,7 +45,6 @@ save_strategy: "steps"
 save_steps: 50
 resume_from_checkpoint: false
 
-# Configuration file paths
-grpo_config_file: "./script/grpo.yaml"
+
 
 
