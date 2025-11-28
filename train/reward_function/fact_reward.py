@@ -30,12 +30,12 @@ class FactualityScorer:
                 return None
             
             logger.info("Initializing FactScorer using standard method")
-            
+            model_name = os.environ.get("FACTSCORE_MODEL") or os.environ.get("REWARD_MODEL_NAME", "gpt-4o-mini-2024-07-18")
             fs = FactScorer(
                 openai_key=openai_api_key,
                 base_url=base_url,
                 cache_dir=None,
-                af_model_version='gpt-4o-mini-2024-07-18',
+                af_model_version=model_name,
                 use_nli=True,
                 nli_model_name="MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli",
                 nli_entailment_threshold=0.3,
@@ -134,6 +134,7 @@ class FactualityScorer:
                         result = fs_results[idx]
                         
                         supported_facts_count = float(result.get("score", 0))
+                        #factuality_score = min(supported_facts_count / 15.0, 1.0)
                         factuality_score = supported_facts_count
                         
                         rewards[i] = float(factuality_score)
