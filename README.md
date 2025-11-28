@@ -25,12 +25,15 @@
 
 ---
 ## 📢News
-- **[2025-11]** 🔥 We have significantly expanded our training capabilities! In addition to the standard GRPO, we now support three advanced reinforcement learning algorithms:
-    - **DAPO (Distribution-Aware Policy Optimization)**
-    - **BNPO (Batch-Normalized Policy Optimization)**
-    - **DR-GRPO (Distribution-Robust GRPO)**
-    
+- **[2025-11]** 🔥 We have significantly expanded our training capabilities! In addition to the standard GRPO, we now support three advanced reinforcement learning algorithms: **DAPO [1]**, **BNPO [2]**, and **DR-GRPO [3]**.
+
   You can find the corresponding configuration files (`dapo.yaml`, `bnpo.yaml`, `dr_grpo.yaml`) in the `script/` directory to experiment with these new methods.
+
+  <small>
+  [1] Dapo: An open-source llm reinforcement learning system at scale <br>
+  [2] BNPO: Beta Normalization Policy Optimization <br>
+  [3] Understanding R1-Zero-Like Training: A Critical Perspective
+  </small>
   
 ## 🌻Acknowledgement
 Our Cold-Start SFT stage is implemented based on the excellent [LLaMA-Factory](https://github.com/hiyouga/LLaMA-Factory) framework. Our reinforcement learning training code is based on [TRL](https://github.com/huggingface/trl) and [Unsloth](https://github.com/unslothai/unsloth). We thank all authors for their great contributions!
