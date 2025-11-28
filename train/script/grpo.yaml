@@ -2,8 +2,8 @@
 model_name_or_path: "your_model_path/model_name" # Please replace with your model path
 model_revision: main
 torch_dtype: bfloat16
-lora_r: 256
-lora_alpha: 512
+lora_r: 128
+lora_alpha: 256
 attn_implementation: flash_attention_2
 bf16: true
 tf32: true
@@ -19,7 +19,7 @@ swanlab_experiment_name:: "your_swanlab_experiment_name" # Please replace with y
 
 # Training parameters
 max_steps: 150
-per_device_train_batch_size: 24
+per_device_train_batch_size: 20
 gradient_accumulation_steps: 4
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
@@ -34,7 +34,7 @@ beta: 0.001
 optim: adamw_8bit
 max_prompt_length: 256
 max_completion_length: 1024
-num_generations: 12
+num_generations: 10
 use_vllm: true
 vllm_gpu_memory_utilization: 0.5
 
