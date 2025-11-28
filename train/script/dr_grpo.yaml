@@ -1,0 +1,84 @@
+# Model parameters
+model_name_or_path: path/to/your/model_name  # Please replace with your actual model path
+model_revision: main
+torch_dtype: bfloat16
+lora_r: 128
+lora_alpha: 256
+attn_implementation: flash_attention_2
+bf16: true
+tf32: true
+output_dir: path/to/your/output_dir  # Please replace with your desired output directory
+
+# Dataset parameters
+dataset_id_or_path: path/to/your/dataset.json  # Please replace with your actual dataset path
+
+# SwanLab parameters
+report_to: swanlab
+swanlab_project: your_project_name  # Please replace with your project name
+swanlab_experiment_name: your_experiment_name  # Please replace with your experiment name
+
+# Training parameters
+max_steps: 500
+per_device_train_batch_size: 20
+gradient_accumulation_steps: 2
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+learning_rate: 1.0e-5
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+seed: 42
+
+# ============================================================================
+# DR-GRPO Core Configuration Parameters
+# ============================================================================
+loss_type: dr_grpo  # Use DR-GRPO loss - normalized by a global constant
+
+# Sequence length configuration - Critical!
+# DR-GRPO uses max_completion_length as the normalization constant
+max_prompt_length: 256       # Maximum prompt length
+max_completion_length: 1024  # Maximum completion length (used as normalization constant)
+
+# DR-GRPO features:
+# 1. Normalize by a fixed constant (max_completion_length) to eliminate length bias
+# 2. Unaffected by actual sequence length, resulting in more stable training
+# 3. Paper recommendation: do not scale rewards
+
+# Clipping parameters
+epsilon: 0.2           # Lower bound epsilon (PPO standard value)
+epsilon_high: null     # DR-GRPO uses symmetric clipping, no upper bound set
+delta: null            # Do not use two-sided clipping
+
+# Importance Sampling configuration
+importance_sampling_level: token  # Token-level importance sampling
+vllm_importance_sampling_correction: false  # Disabled initially to avoid dimension mismatches
+
+# GRPO algorithm parameters
+beta: 0.001  # KL coefficient
+optim: adamw_8bit
+num_generations: 10
+num_iterations: 1
+
+# Reward configuration - Key feature of DR-GRPO!
+reward_weights: null
+scale_rewards: false  # DR-GRPO paper strongly recommends: do not scale rewards!
+                      # Reason: Scaling by standard deviation introduces problem difficulty bias
+
+# Truncation handling
+mask_truncated_completions: false  # DR-GRPO defaults to not masking
+
+# vLLM configuration
+use_vllm: true
+vllm_mode: colocate  # Or "server"
+vllm_gpu_memory_utilization: 0.5
+vllm_model_impl: vllm
+
+# Logging parameters
+logging_strategy: steps
+logging_steps: 1
+log_completions: true
+num_completions_to_print: 3
+
+save_strategy: steps
+save_steps: 50
+resume_from_checkpoint: false
