@@ -8,7 +8,8 @@ from typing import Dict, Any, Optional
 import os
 logger = logging.getLogger(__name__)
 current_dir = os.path.dirname(os.path.abspath(__file__))
-GRPO_path = os.path.join(current_dir, '..', 'script', 'grpo.yaml')
+config_file_name = os.getenv('TRAIN_CONFIG_FILE', 'grpo.yaml')
+GRPO_path = os.path.join(current_dir, '..', 'script', config_file_name)
 
 def load_yaml_config(yaml_path=GRPO_path):
     try:
