@@ -7,8 +7,8 @@ from datasets import load_dataset
 from transformers import AutoTokenizer
 from transformers.trainer_utils import get_last_checkpoint
 # Core GRPO imports
-from unsloth import FastLanguageModel, PatchFastRL
-PatchFastRL("GRPO", FastLanguageModel)
+from unsloth import FastLanguageModel
+
 from trl import GRPOConfig, GRPOTrainer, ModelConfig, TrlParser
 
 # Local imports
@@ -224,7 +224,7 @@ def grpo_function(
 
 def main():
     parser = TrlParser((ModelConfig, DatasetArguments, GRPOConfig))
-    model_args, dataset_args, training_args = parser.parse_args_and_config()
+    model_args, dataset_args, training_args = parser.parse_args_and_config(fail_with_unknown_args=False)
     
     config_file_path = get_default_config_path()
     swanlab_callback = create_swanlab_callback_from_yaml(config_file_path)
