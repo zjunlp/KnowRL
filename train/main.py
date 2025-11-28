@@ -112,10 +112,11 @@ def grpo_function(
         fast_inference=True,
         load_in_4bit=False,
         max_lora_rank=model_args.lora_r,
-        max_seq_length=2048,
+        max_seq_length=training_args.max_prompt_length + training_args.max_completion_length, 
         gpu_memory_utilization=training_args.vllm_gpu_memory_utilization,
         attn_implementation=model_args.attn_implementation,
     ) 
+
 
     # Configure PEFT model
     model = FastLanguageModel.get_peft_model(
