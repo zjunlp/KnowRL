@@ -1,0 +1,75 @@
+# Model parameters
+model_name_or_path: path/to/your/model_name  # Please replace with your actual model path
+model_revision: main
+torch_dtype: bfloat16
+lora_r: 128
+lora_alpha: 256
+attn_implementation: flash_attention_2
+bf16: true
+tf32: true
+output_dir: path/to/your/output_dir  # Please replace with your desired output directory
+
+# Dataset parameters
+dataset_id_or_path: path/to/your/dataset.json  # Please replace with your actual dataset path
+
+# SwanLab parameters
+report_to: swanlab
+swanlab_project: your_project_name  # Please replace with your project name
+swanlab_experiment_name: your_experiment_name  # Please replace with your experiment name
+
+# Training parameters
+max_steps: 500
+per_device_train_batch_size: 20
+gradient_accumulation_steps: 2
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+learning_rate: 1.0e-5
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+seed: 42
+
+# ============================================================================
+# DAPO Core Configuration Parameters
+# ============================================================================
+loss_type: dapo  # Use DAPO loss
+
+# Sequence length configuration - Critical!
+max_prompt_length: 512      # Maximum prompt length
+max_completion_length: 1024  # Maximum completion length (must match vLLM generation length)
+
+# DAPO recommended additional configuration
+mask_truncated_completions: true  # Recommended by DAPO paper to enable: exclude truncated completions
+epsilon: 0.2           # Lower bound epsilon
+epsilon_high: 0.28     # Upper bound epsilon (recommended value from DAPO paper)
+scale_rewards: "none"  # DAPO option: can choose not to scale rewards or use "group"
+
+# Importance sampling configuration
+importance_sampling_level: token  # Token-level importance sampling
+vllm_importance_sampling_correction: false  # Disabled initially to avoid dimension mismatches
+# vllm_importance_sampling_cap: 2.0  # If correction is enabled, set the clipping parameter here
+
+# GRPO algorithm parameters
+beta: 0.001  # KL coefficient
+optim: adamw_8bit
+num_generations: 10
+num_iterations: 1
+
+# vLLM configuration
+use_vllm: true
+vllm_mode: colocate  # Or "server"
+vllm_gpu_memory_utilization: 0.5
+vllm_model_impl: vllm
+
+# Reward configuration
+reward_weights: null  # If there are multiple rewards, weights can be set here, e.g., [1.0, 0.5]
+
+# Logging parameters
+logging_strategy: steps
+logging_steps: 1
+log_completions: true  # Log generated completions
+num_completions_to_print: 3
+
+save_strategy: "steps"
+save_steps: 50
+resume_from_checkpoint: false
