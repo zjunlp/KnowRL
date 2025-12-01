@@ -27,7 +27,7 @@
 ## 📢News
 - **[2025-11]** 🔥 We have significantly expanded our training capabilities! In addition to the standard GRPO, we now support three advanced reinforcement learning algorithms: **DAPO [1]**, **BNPO [2]**, and **DR-GRPO [3]**.
 
-  You can find the corresponding configuration files (`dapo.yaml`, `bnpo.yaml`, `dr_grpo.yaml`) in the `script/` directory to experiment with these new methods.
+  You can find the corresponding configuration files (`dapo.yaml`, `bnpo.yaml`, `dr_grpo.yaml`) in the `script/` directory to experiment with these new methods. The code for the old version is stored in Releases Version 1.
 
   <small>
   [1] Dapo: An open-source llm reinforcement learning system at scale <br>
